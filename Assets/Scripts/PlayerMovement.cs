@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,20 +9,24 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private Rigidbody playerRigidbody;
     [SerializeField] private float speed;
-    [SerializeField] private int lives;
+    [SerializeField] private int livesMax;
     [Header("UI")]
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text livesText;
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject mainMenuPanel;
 
     private int score;
     private int increaseLivesCounter = 0;
+    private int lives;
+    private bool isPaused;
+    private IEnumerator coroutine;
+    private Vector3 startPosition;
 
     private void Start()
     {
-        gameOverPanel.SetActive(false);
-        scoreText.text = $"Score: {score.ToString()}";
-        livesText.text = $"Lives: {lives}";
+        startPosition = transform.position;
     }
 
     private void FixedUpdate()
@@ -64,6 +69,27 @@ public class PlayerMovement : MonoBehaviour
             
             Rotate(180, new Vector3(0, -180, 0));
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Pause();
+        }
+    }
+    
+    private void Pause()
+    {
+        if (isPaused)
+        {
+            pausePanel.SetActive(false);
+            Time.timeScale = 1;
+        }
+        else
+        {
+            pausePanel.SetActive(true);
+            Time.timeScale = 0;
+        }
+
+        isPaused = !isPaused;
     }
     
     public void SetScore(int scoreAmount)
@@ -86,11 +112,11 @@ public class PlayerMovement : MonoBehaviour
         increaseLivesCounter -= 10;
         lives = Math.Max(lives - 1, 0);
         livesText.text = $"Lives: {lives}";
+
+        if (lives != 0) return;
         
-        if (lives == 0)
-        {
-            gameOverPanel.SetActive(true);
-        }
+        StopAllCoroutines();
+        gameOverPanel.SetActive(true);
     }
 
     private void CanIncreaseLives()
@@ -115,5 +141,52 @@ public class PlayerMovement : MonoBehaviour
         if (Mathf.Approximately(transform.rotation.eulerAngles.y, rotationY)) return;
             
         transform.Rotate(target, Space.Self);
+    }
+
+    public void PlayGame()
+    {
+        DestroyAllSpawnedObjects();
+        
+        Time.timeScale = 1;
+        score = 0;
+        lives = livesMax;
+        increaseLivesCounter = 0;
+        transform.position = startPosition;
+        transform.rotation = Quaternion.identity;
+        
+        scoreText.text = $"Score: {score.ToString()}";
+        livesText.text = $"Lives: {lives}";
+        
+        gameOverPanel.SetActive(false);
+        pausePanel.SetActive(false);
+        mainMenuPanel.SetActive(false);
+        coroutine = GameManager.Instance.StartGame();
+        StartCoroutine(coroutine);
+    }
+
+    public void BackToMainMenu()
+    {
+        Time.timeScale = 1;
+        if (coroutine != null) StopCoroutine(coroutine);
+        pausePanel.SetActive(false);
+        mainMenuPanel.SetActive(true);
+    }
+
+    private void DestroyAllSpawnedObjects()
+    {
+        FallingObject[] fallingObjects =  FindObjectsByType<FallingObject>(FindObjectsSortMode.None);
+        foreach (FallingObject fallingObject in fallingObjects)
+        {
+            Destroy(fallingObject.gameObject);
+        }
+    }
+    
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        GameManager.Instance.Quit();
+        #endif
     }
 }

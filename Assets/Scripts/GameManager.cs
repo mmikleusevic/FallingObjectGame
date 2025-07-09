@@ -7,22 +7,18 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance {  get; private set; }
+    public static GameManager Instance { get; private set; }
     
     [SerializeField] private FallingObject[] collectibles;
     [SerializeField] private float[] spawnRange;
     
+
     private void Awake()
     {
-        if (!Instance) Instance = this;
+        Instance = this;
     }
-
-    private IEnumerator Start()
-    {
-        yield return Instantiate();
-    }
-
-    private IEnumerator Instantiate()
+    
+    public IEnumerator StartGame()
     {
         yield return new WaitForSeconds(1);
 
@@ -34,7 +30,7 @@ public class GameManager : MonoBehaviour
         
         Instantiate(collectibles[randomIndex], new Vector3(randomPositionX, 18f, 8), Quaternion.identity);
         
-        yield return Instantiate();
+        yield return StartGame();
     }
 
     private int RandomIndex(int length)
@@ -46,9 +42,9 @@ public class GameManager : MonoBehaviour
     {
         return Random.Range(min, max);
     }
-    
-    public void PlayAgain()
+
+    public void Quit()
     {
-        SceneManager.LoadScene(0);
+        Application.Quit();
     }
 }
