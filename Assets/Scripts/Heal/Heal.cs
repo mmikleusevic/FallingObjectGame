@@ -11,11 +11,11 @@ public class Heal : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.F))
         {
-            if (isHealing) return;
-            if (!other.TryGetComponent(out PlayerTest playerTest));
-                
-            coroutine = HealPlayer(playerTest);
-            StartCoroutine(coroutine);
+            if (!isHealing && other.TryGetComponent(out PlayerTest playerTest))
+            {
+                coroutine = HealPlayer(playerTest);
+                StartCoroutine(coroutine);
+            }
         }
         else
         {

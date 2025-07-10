@@ -105,6 +105,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreAmount: 5
+  audioClip: {fileID: 8300000, guid: 9b76f988da1e1164ebc6b9ca9c1a2cdb, type: 3}
 --- !u!54 &-1685177608955130616
 Rigidbody:
   m_ObjectHideFlags: 0
