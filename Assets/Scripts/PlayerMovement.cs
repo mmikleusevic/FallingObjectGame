@@ -15,7 +15,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private TMP_Text livesText;
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject pausePanel;
-    [SerializeField] private GameObject mainMenuPanel;
 
     private int score;
     private int increaseLivesCounter = 0;
@@ -27,6 +26,8 @@ public class PlayerMovement : MonoBehaviour
     private void Start()
     {
         startPosition = transform.position;
+        
+        PlayGame();
     }
 
     private void FixedUpdate()
@@ -159,7 +160,6 @@ public class PlayerMovement : MonoBehaviour
         
         gameOverPanel.SetActive(false);
         pausePanel.SetActive(false);
-        mainMenuPanel.SetActive(false);
         coroutine = GameManager.Instance.StartGame();
         StartCoroutine(coroutine);
     }
@@ -169,7 +169,6 @@ public class PlayerMovement : MonoBehaviour
         Time.timeScale = 1;
         if (coroutine != null) StopCoroutine(coroutine);
         pausePanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
     }
 
     private void DestroyAllSpawnedObjects()

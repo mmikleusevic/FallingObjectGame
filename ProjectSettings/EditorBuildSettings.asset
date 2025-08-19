@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/falling object game Vanesa Kapetanic.unity
+    path: Assets/Scenes/MainMenu.unity
     guid: da69fe27ffd8b4647af0f28ce9462842
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 26bafb5459dcdcd409ec749c64ebbc22
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+    guid: 1e3f18fcf0957ba40892f0dee0a1e119
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

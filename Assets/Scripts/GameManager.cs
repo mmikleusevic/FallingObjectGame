@@ -10,14 +10,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     
     [SerializeField] private FallingObject[] collectibles;
-    [SerializeField] private float[] spawnRange;
     
+    [SerializeField] private float[] spawnRange;
 
     private void Awake()
     {
         Instance = this;
     }
-    
+
     public IEnumerator StartGame()
     {
         yield return new WaitForSeconds(1);
