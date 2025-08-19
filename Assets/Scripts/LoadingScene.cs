@@ -10,13 +10,14 @@ public class LoadingScene : MonoBehaviour
     
     private void Awake()
     {
-        if (Instance == null)
+        if (!Instance)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            DontDestroyOnLoad(gameObject);
+            Destroy(gameObject);
         }
     }
     
